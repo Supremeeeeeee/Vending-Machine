@@ -6,38 +6,18 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 
 
-RegisterNetEvent('curse-givecola')
-AddEventHandler('curse-givecola', function()
-    local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
-    if xPlayer.getInventoryItem('money').count >= 15 then 
-        xPlayer.removeMoney(15)
-        xPlayer.addInventoryItem("cola", 1)
-    else
-        TriggerClientEvent('dopeNotify2:Alert', source, "", "You are broke", 1500, 'error')
-    end
-end)
-
-RegisterNetEvent('curse-givegatorb')
-AddEventHandler('curse-givegatorb', function()
-    local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
-    if xPlayer.getInventoryItem('money').count >= 30 then 
-        xPlayer.removeMoney(30)
-        xPlayer.addInventoryItem("gatoradeb", 1)
-    else
-        TriggerClientEvent('dopeNotify2:Alert', source, "", "You are broke", 1500, 'error')
-    end
-end)
-
-RegisterNetEvent('curse-givegatory')
-AddEventHandler('curse-givegatory', function()
-    local _source = source
-    local xPlayer = ESX.GetPlayerFromId(_source)
-    if xPlayer.getInventoryItem('money').count >= 30 then 
-        xPlayer.removeMoney(30)
-        xPlayer.addInventoryItem("gatoradey", 1)
-    else
-        TriggerClientEvent('dopeNotify2:Alert', source, "", "You are broke", 1500, 'error')
-    end
-end)
+RegisterServerEvent('curse:SetBuy')
+AddEventHandler('curse:SetBuy', function(itemName, price)
+	local xPlayer  = ESX.GetPlayerFromId(source)
+	if xPlayer.canCarryItem(itemName, 1) then
+		if xPlayer.getMoney() > price then
+			xPlayer.addInventoryItem(itemName,1)
+			xPlayer.removeMoney(price)
+			TriggerClientEvent('mythic_notify:client:SendAlert', source, { type = 'error', text = 'You paid ' .. price, })
+		else
+			TriggerClientEvent('mythic_notify:client:SendAlert', source, { type = 'error', text = 'Not enough money', })
+		end
+	else
+		TriggerClientEvent('mythic_notify:client:SendAlert', source, { type = 'error', text = 'Can not carry', })
+	end
+end)	
