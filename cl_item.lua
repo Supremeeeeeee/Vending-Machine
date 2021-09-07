@@ -14,6 +14,8 @@ ESX              = nil
 local PlayerData = {}
 local ped = PlayerPedId()
 local mainMenu = false
+local animation = true
+local animationtime = 1500
 
 
 Citizen.CreateThread(function()
@@ -71,10 +73,11 @@ RegisterNetEvent('curse-vending1', function()
             header = "Buy A Cola($15)",
             txt = "This will purchase a cola",
             params = {
-                event = "cola1",
-                args = {
-                    number = 1,
-                    id = 2
+                event = "curse:BuyItem",
+               args = {
+                    itemName = 'cola',
+					price = 15,
+                    
                 }
             }
         },
@@ -93,37 +96,50 @@ RegisterNetEvent('curse-vending2', function()
             header = "Blue Gatorade",
             txt = "$30",
             params = {
-                event = "gatorb",
-                args = {
-                    number = 1,
-                    id = 2
+                event = "curse:BuyItem",
+               args = {
+                    itemName = 'gatoradeb',
+					price = 30,
+                    
                 }
             }
         },
 		{
             id = 3,
-            header = "Yellow Gatorade",
+            header = "curse-buyitem",
             txt = "$30",
             params = {
-                event = "gatory",
-                args = {
-                    number = 1,
-                    id = 2
+                event = "curse:BuyItem",
+               args = {
+                    itemName = 'gatoradey',
+					price = 30,
+                    
                 }
             }
         },
     })
 end)
 
+--Animation
+function playAnim(animDict, animName, duration)
+	RequestAnimDict(animDict)
+	while not HasAnimDictLoaded(animDict) do Citizen.Wait(0) end
+	TaskPlayAnim(PlayerPedId(), animDict, animName, 1.0, -1.0, duration, 49, 1, false, false, false)
+	RemoveAnimDict(animDict)
+end
 
-AddEventHandler('cola1', function ()
-	TriggerServerEvent('curse-givecola', ped)
+AddEventHandler('animation', function ()
+	if animation then 
+		playAnim('mp_common', 'givetake1_a', animationtime)
+		Citizen.Wait(animationtime)
+	end
 end)
 
-AddEventHandler('gatorb', function ()
-	TriggerServerEvent('curse-givegatorb', ped)
-end)
-
-AddEventHandler('gatory', function ()
-	TriggerServerEvent('curse-givegatory', ped)
-end)
+RegisterNetEvent('curse:BuyItem')
+AddEventHandler('curse:BuyItem', function(data)
+    local itemName = data.itemName
+    local price = data.price
+TriggerEvent('animation')
+Citizen.Wait(animationtime)
+    TriggerServerEvent('curse:SetBuy', itemName, price)
+end) 
