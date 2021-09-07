@@ -106,7 +106,7 @@ RegisterNetEvent('curse-vending2', function()
         },
 		{
             id = 3,
-            header = "curse-buyitem",
+            header = "Yellow Gatorade",
             txt = "$30",
             params = {
                 event = "curse:BuyItem",
