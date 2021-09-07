@@ -6,7 +6,7 @@ qtarget
 esx_legacy
 nh-context
 linden_inventory
-dope_notify
+dope_notify(REMOVED) - mythic_notify
 
 ```
 
