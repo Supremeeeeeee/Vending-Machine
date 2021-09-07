@@ -143,3 +143,4 @@ TriggerEvent('animation')
 Citizen.Wait(animationtime)
     TriggerServerEvent('curse:SetBuy', itemName, price)
 end) 
+--END
